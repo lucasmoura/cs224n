@@ -27,18 +27,30 @@ def softmax(x):
     x -- You are allowed to modify x in-place
     """
     orig_shape = x.shape
+    exp_values = 0
+    sum_exp = 0
 
     if len(x.shape) > 1:
         # Matrix
         ### YOUR CODE HERE
-        raise NotImplementedError
+        num_rows = orig_shape[0]
+        max_values = np.max(x, axis=1).reshape((num_rows, 1))
+        x -= max_values
+
+        exp_values = np.exp(x)
+        sum_exp = np.sum(exp_values, axis=1).reshape((num_rows, 1))
         ### END YOUR CODE
     else:
         # Vector
         ### YOUR CODE HERE
-        raise NotImplementedError
+        max_value = np.max(x)
+        x -= max_value
+
+        exp_values = np.exp(x)
+        sum_exp = np.sum(exp_values)
         ### END YOUR CODE
 
+    x = exp_values / sum_exp
     assert x.shape == orig_shape
     return x
 
@@ -84,4 +96,4 @@ def test_softmax():
 
 if __name__ == "__main__":
     test_softmax_basic()
-    test_softmax()
+    # test_softmax()

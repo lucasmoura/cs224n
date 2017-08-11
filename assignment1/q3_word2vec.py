@@ -68,9 +68,14 @@ def softmaxCostAndGradient(predicted, target, outputVectors, dataset):
     free to reference the code you previously wrote for this
     assignment!
     """
-
+    
     ### YOUR CODE HERE
-    raise NotImplementedError
+    y_hat = softmax(predicted.dot(outputVectors.T))
+    cost = -np.log(y_hat[target])
+
+    y_hat[target] -= 1
+    gradPred = outputVectors.T.dot(y_hat)
+    grad = np.outer(y_hat, predicted)
     ### END YOUR CODE
 
     return cost, gradPred, grad
@@ -143,7 +148,17 @@ def skipgram(currentWord, C, contextWords, tokens, inputVectors, outputVectors,
     gradOut = np.zeros(outputVectors.shape)
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    current_word_index = tokens[currentWord]
+    predicted = inputVectors[current_word_index]
+
+    for context_word in contextWords:
+        ncost, ngradIn, ngradOut = word2vecCostAndGradient(
+            predicted, tokens[context_word], outputVectors, dataset)
+
+        cost += ncost
+        gradIn[current_word_index] += ngradIn
+        gradOut += ngradOut
+
     ### END YOUR CODE
 
     return cost, gradIn, gradOut
@@ -206,21 +221,42 @@ def word2vec_sgd_wrapper(word2vecModel, tokens, wordVectors, dataset, C,
 
 def test_word2vec():
     """ Interface to the dataset for negative sampling """
+
+    """
+    Create a dummy dataset class using the type function.
+    The first argument is the __name__ attribute of the class,
+    the second parameter is the base class, and the third a
+    dict containing the class attributes.
+    """
     dataset = type('dummy', (), {})()
     def dummySampleTokenIdx():
+        # return an integer ranging from (0, 4)
         return random.randint(0, 4)
 
+    """
+    This function basically creates the window for testing
+    the word2vec approach.
+
+    A center word is choosen and then the context words are chosen
+    after that.
+    """
     def getRandomContext(C):
         tokens = ["a", "b", "c", "d", "e"]
         return tokens[random.randint(0,4)], \
             [tokens[random.randint(0,4)] for i in xrange(2*C)]
+
     dataset.sampleTokenIdx = dummySampleTokenIdx
     dataset.getRandomContext = getRandomContext
 
     random.seed(31415)
     np.random.seed(9265)
+    
+    """
+    In this test, the word vectos will have the dimension 10X3
+    """
     dummy_vectors = normalizeRows(np.random.randn(10,3))
     dummy_tokens = dict([("a",0), ("b",1), ("c",2),("d",3),("e",4)])
+
     print "==== Gradient check for skip-gram ===="
     gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
         skipgram, dummy_tokens, vec, dataset, 5, softmaxCostAndGradient),

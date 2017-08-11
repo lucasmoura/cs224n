@@ -15,7 +15,19 @@ def normalizeRows(x):
     """
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    """
+    Lets first calculate the L2 norm for each row of the matrix
+    """
+    squared_matrix = x ** 2
+    l2_norm = np.sqrt(np.sum(squared_matrix, axis=1, keepdims=True))
+
+    """
+    With the L2 norm calculated for each row, we can turn each
+    row vector into unit length, by dividing each value in the row
+    by the respective row norm.
+    """
+
+    x = x / l2_norm
     ### END YOUR CODE
 
     return x

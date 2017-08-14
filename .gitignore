@@ -1,0 +1,8 @@
+*.pyc
+*.npy
+*.tex
+*.pdf
+*.aux
+*.log
+*.out
+assignment1/utils/datasets/*

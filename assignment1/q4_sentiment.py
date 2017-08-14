@@ -64,7 +64,7 @@ def getRegularizationValues():
     """
     values = None   # Assign a list of floats in the block below
     ### YOUR CODE HERE
-    raise NotImplementedError
+    values = np.logspace(-2, 2, num=100)
     ### END YOUR CODE
     return sorted(values)
 
@@ -86,9 +86,10 @@ def chooseBestModel(results):
     Your chosen result dictionary.
     """
     bestResult = None
+    bestValue = 1000000
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    bestResult = max(results, key=lambda x: x['dev'])
     ### END YOUR CODE
 
     return bestResult

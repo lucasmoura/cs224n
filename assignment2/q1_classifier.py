@@ -98,6 +98,14 @@ class SoftmaxModel(Model):
             pred: A tensor of shape (batch_size, n_classes)
         """
         ### YOUR CODE HERE
+        n_features = self.config.n_features
+        n_classes = self.config.n_classes
+
+        weights = tf.Variable(tf.zeros(shape=[n_features, n_classes]))
+        bias = tf.Variable(tf.zeros(shape=[n_classes]))
+
+        z = tf.matmul(self.input_placeholder, weights) + bias
+        pred = softmax(z)
         ### END YOUR CODE
         return pred
 
@@ -112,6 +120,7 @@ class SoftmaxModel(Model):
             loss: A 0-d tensor (scalar)
         """
         ### YOUR CODE HERE
+        loss = cross_entropy_loss(self.labels_placeholder, pred)
         ### END YOUR CODE
         return loss
 

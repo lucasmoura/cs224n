@@ -5,4 +5,6 @@
 *.aux
 *.log
 *.out
+
 assignment1/utils/datasets/*
+assignment2/.idea/*

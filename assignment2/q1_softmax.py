@@ -61,6 +61,9 @@ def cross_entropy_loss(y, yhat):
     """
 
     ### YOUR CODE HERE
+    target_values = tf.reduce_sum(yhat * tf.to_float(y),
+                                  axis=1, keep_dims=True)
+    out = tf.negative(tf.reduce_sum(tf.log(target_values)))
     ### END YOUR CODE
 
     return out

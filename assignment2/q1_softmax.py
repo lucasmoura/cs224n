@@ -24,6 +24,13 @@ def softmax(x):
     """
 
     ### YOUR CODE HERE
+    max_elements = tf.reduce_max(x, axis=1, keep_dims=True)
+    x = tf.subtract(x, max_elements)
+
+    exp_values = tf.exp(x)
+    exp_sum = tf.reduce_sum(exp_values, axis=1, keep_dims=True)
+
+    out = tf.divide(exp_values, exp_sum)
     ### END YOUR CODE
 
     return out

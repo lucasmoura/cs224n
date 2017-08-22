@@ -144,6 +144,9 @@ class SoftmaxModel(Model):
             train_op: The Op for training.
         """
         ### YOUR CODE HERE
+        learning_rate = self.config.lr
+        train_op = tf.train.GradientDescentOptimizer(
+            learning_rate).minimize(loss)
         ### END YOUR CODE
         return train_op
 

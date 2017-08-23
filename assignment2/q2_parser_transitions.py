@@ -1,4 +1,4 @@
-import collections
+import copy
 
 
 class PartialParse(object):
@@ -87,6 +87,24 @@ def minibatch_parse(sentences, model, batch_size):
     """
 
     ### YOUR CODE HERE
+    partial_parses = [PartialParse(sentence) for sentence in sentences]
+    unfinished_parsers = copy.copy(partial_parses)
+
+    while len(unfinished_parsers) != 0:
+        minibatch = unfinished_parsers[0:batch_size]
+
+        while len(minibatch) != 0:
+            transitions = model.predict(minibatch)
+
+            for parse, transition in zip(minibatch, transitions):
+                parse.parse_step(transition)
+
+            minibatch = [parser for parser in minibatch
+                         if len(parser.stack) > 1 or len(parser.buffer) > 0]
+
+        unfinished_parsers = unfinished_parsers[batch_size:]
+
+    dependencies = [parser.dependencies for parser in partial_parses]
     ### END YOUR CODE
 
     return dependencies

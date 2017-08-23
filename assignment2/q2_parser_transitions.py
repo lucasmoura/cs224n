@@ -1,3 +1,6 @@
+import collections
+
+
 class PartialParse(object):
     def __init__(self, sentence):
         """Initializes this partial parse.
@@ -21,6 +24,9 @@ class PartialParse(object):
         self.sentence = sentence
 
         ### YOUR CODE HERE
+        self.stack = ['ROOT']
+        self.buffer = sentence[:]
+        self.dependencies = []
         ### END YOUR CODE
 
     def parse_step(self, transition):
@@ -31,6 +37,22 @@ class PartialParse(object):
                         and right-arc transitions.
         """
         ### YOUR CODE HERE
+        if transition == 'S':
+            word = self.buffer[0]
+            self.stack.append(word)
+            self.buffer = self.buffer[1:]
+        elif transition == 'LA':
+            head = self.stack[-1]
+            dependent = self.stack[-2]
+
+            self.dependencies.append((head, dependent))
+            self.stack.remove(dependent)
+        else:
+            head = self.stack[-2]
+            dependent = self.stack[-1]
+
+            self.dependencies.append((head, dependent))
+            self.stack.remove(dependent)
         ### END YOUR CODE
 
     def parse(self, transitions):

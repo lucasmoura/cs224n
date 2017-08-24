@@ -1,6 +1,3 @@
-import copy
-
-
 class PartialParse(object):
     def __init__(self, sentence):
         """Initializes this partial parse.
@@ -40,19 +37,19 @@ class PartialParse(object):
         if transition == 'S':
             word = self.buffer[0]
             self.stack.append(word)
-            self.buffer = self.buffer[1:]
+            self.buffer.pop(0)
         elif transition == 'LA':
             head = self.stack[-1]
             dependent = self.stack[-2]
 
             self.dependencies.append((head, dependent))
-            self.stack.remove(dependent)
+            self.stack.pop(-2)
         else:
             head = self.stack[-2]
             dependent = self.stack[-1]
 
             self.dependencies.append((head, dependent))
-            self.stack.remove(dependent)
+            self.stack.pop(-1)
         ### END YOUR CODE
 
     def parse(self, transitions):
@@ -88,12 +85,12 @@ def minibatch_parse(sentences, model, batch_size):
 
     ### YOUR CODE HERE
     partial_parses = [PartialParse(sentence) for sentence in sentences]
-    unfinished_parsers = copy.copy(partial_parses)
+    unfinished_parsers = partial_parses
 
-    while len(unfinished_parsers) != 0:
+    while len(unfinished_parsers) > 0:
         minibatch = unfinished_parsers[0:batch_size]
 
-        while len(minibatch) != 0:
+        while len(minibatch) > 0:
             transitions = model.predict(minibatch)
 
             for parse, transition in zip(minibatch, transitions):

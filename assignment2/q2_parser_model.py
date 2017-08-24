@@ -114,8 +114,8 @@ class ParserModel(Model):
         n_features = self.config.n_features
         embedding_size = self.config.embed_size
 
-        embeddings = tf.Variable(self.pretrained_embeddings)
-        embeddings = tf.nn.embedding_lookup(embeddings, self.input_placeholder)
+        embedded = tf.Variable(self.pretrained_embeddings)
+        embeddings = tf.nn.embedding_lookup(embedded, self.input_placeholder)
         embeddings = tf.reshape(embeddings, [-1, n_features * embedding_size])
 
         ### END YOUR CODE
@@ -155,17 +155,17 @@ class ParserModel(Model):
 
         xavier_initializer = xavier_weight_init()
 
-        self.W = xavier_initializer([n_features * embed_size, hidden_size])
-        self.U = xavier_initializer([hidden_size, n_classes])
+        W = xavier_initializer([n_features * embed_size, hidden_size])
+        U = xavier_initializer([hidden_size, n_classes])
 
-        self.b1 = tf.Variable(tf.zeros(shape=[hidden_size]))
-        self.b2 = tf.Variable(tf.zeros(shape=[n_classes]))
+        b1 = tf.Variable(tf.random_uniform([self.config.hidden_size,]))
+        b2 = tf.Variable(tf.random_uniform([self.config.n_classes]))
 
-        z1 = tf.matmul(x, self.W) + self.b1
+        z1 = tf.matmul(x, W) + b1
         h = tf.nn.relu(z1)
         h_drop = tf.nn.dropout(h, self.dropout_placeholder)
 
-        pred = tf.matmul(h_drop, self.U) + self.b2
+        pred = tf.matmul(h_drop, U) + b2
         ### END YOUR CODE
         return pred
 
@@ -295,6 +295,6 @@ def main(debug=True):
                 print "Done!"
 
 if __name__ == '__main__':
-    main()
+    main(False)
 
 

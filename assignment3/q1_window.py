@@ -11,6 +11,8 @@ import argparse
 import sys
 import time
 import logging
+import collections
+import itertools
 from datetime import datetime
 
 import tensorflow as tf
@@ -97,7 +99,18 @@ def make_windowed_data(data, start, end, window_size = 1):
     windowed_data = []
     for sentence, labels in data:
     ### YOUR CODE HERE (5-20 lines)
+        whole_sentence = window_size * [start] + sentence + window_size * [end]
 
+        window_queue = collections.deque(whole_sentence)
+        word_windows = []
+
+        while len(word_windows) != len(sentence):
+            window = itertools.chain(*list(window_queue)[:2 * window_size + 1])
+            word_windows.append(list(window))
+            window_queue.popleft()
+
+        for window, label in zip(word_windows, labels):
+            windowed_data.append((window, label))
     ### END YOUR CODE
     return windowed_data
 

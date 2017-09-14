@@ -103,7 +103,16 @@ def pad_sequences(data, max_length):
 
     for sentence, labels in data:
         ### YOUR CODE HERE (~4-6 lines)
-        pass
+        if len(sentence) > max_length:
+            n_set, n_lab = sentence[0:max_length], labels[0:max_length]
+            mask = [True] * max_length
+        else:
+            pad_size = (max_length - len(sentence))
+            n_set = sentence + [zero_vector] * pad_size
+            n_lab = labels + [zero_label] * pad_size
+            mask = [True] * len(sentence) + [False] * pad_size
+
+        ret.append((n_set, n_lab, mask))
         ### END YOUR CODE ###
     return ret
 

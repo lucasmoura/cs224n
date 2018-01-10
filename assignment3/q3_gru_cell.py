@@ -76,7 +76,7 @@ class GRUCell(tf.nn.rnn_cell.RNNCell):
             b_r = tf.get_variable(
                 name='b_r',
                 shape=[self.state_size],
-                initializer=tf.contrib.layers.xavier_initializer())
+                initializer=tf.constant_initializer(0.))
 
             W_z = tf.get_variable(
                 name='W_z',
@@ -89,7 +89,7 @@ class GRUCell(tf.nn.rnn_cell.RNNCell):
             b_z = tf.get_variable(
                 name='b_z',
                 shape=[self.state_size],
-                initializer=tf.contrib.layers.xavier_initializer())
+                initializer=tf.constant_initializer(0.))
 
             W_o = tf.get_variable(
                 name='W_o',
@@ -102,7 +102,7 @@ class GRUCell(tf.nn.rnn_cell.RNNCell):
             b_o = tf.get_variable(
                 name='b_o',
                 shape=[self.state_size],
-                initializer=tf.contrib.layers.xavier_initializer())
+                initializer=tf.constant_initializer(0.))
 
             #z_t = sigmoid(x_t U_z + h_{t-1} W_z + b_z)
             #r_t = sigmoid(x_t U_r + h_{t-1} W_r + b_r)
